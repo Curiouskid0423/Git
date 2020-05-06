@@ -1,0 +1,25 @@
+# My test
+> init
+<<<
+> branch cookie
+<<<
++ f.txt wug.txt
+> checkout cookie
+<<<
+> add f.txt
+<<<
+E f.txt
++ h.txt notwug.txt
+> commit "commit f to cookie"
+<<<
+> rm h.txt
+No reason to remove the file.
+<<<
+> add h.txt
+<<<
+> commit "commit h to cookie."
+<<<
+> rm h.txt
+<<<
+E f.txt
+* h.txt

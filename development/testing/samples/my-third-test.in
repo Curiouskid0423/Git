@@ -1,0 +1,26 @@
+# My test
+> init
+<<<
+> branch candy
+<<<
++ f.txt wug.txt
++ h.txt notwug.txt
+> checkout candy
+<<<
+> add f.txt
+<<<
+> branch lollipop
+<<<
+E f.txt
+> checkout lollipop
+<<<
+> rm f.txt
+No reason to remove the file.
+<<<
+> commit "commit f to lollipop."
+No changes added to the commit.
+<<<
+> add h.txt
+<<<
+E f.txt
+E h.txt

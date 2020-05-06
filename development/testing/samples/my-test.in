@@ -1,0 +1,20 @@
+# My test
+> init
+<<<
+> branch temp
+<<<
+> branch feature
+<<<
+> checkout feature
+<<<
++ f.txt wug.txt
++ h.txt notwug.txt
+> add f.txt
+<<<
+> commit "f is on feature."
+<<<
+E f.txt
+* wug.txt
+> checkout temp
+<<<
+* f.txt
