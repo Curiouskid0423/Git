@@ -2,7 +2,7 @@
 #### CS61B Data Structure, Spring 2020, Final project expanded version.
 <br>
 
-Implemented my own git, a version control language, with no external backbone code support. Gitlet support plain files tracking, and remote collaboration, with most of the essential git commands and functionality. Demo GIF would be posted soon :)
+Implemented my own git, a version control language, with no external backbone code support. Gitlet is written with about 2000 lines of Java. It support plain files tracking, remote collaboration, basically most of the essential git commands and functionality. Demo GIF would be posted soon :)
 <br><i>May, 2020</i><br>
 <div style="display: flex; padding-top: .5rem; ">
     <img src="git_logo.png" alt="git logo" width="30" height="30"/></div>
