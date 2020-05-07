@@ -1,6 +1,5 @@
 # Gitlet 
-#### CS61B Data Structure, Spring 2020, 
-##### Final project expanded version.
+#### CS61B Data Structure, Spring 2020, Final project expanded version.
 <br>
 
 Implemented my own git, a version control language, with no external backbone code support. Gitlet support plain files tracking, and remote collaboration, with most of the essential git commands and functionality.
@@ -35,10 +34,10 @@ Implemented my own git, a version control language, with no external backbone co
 
 <hr>
 
-##### Development uses
+#### Development uses
 - Check out the java files in `/development` directory. Makefile and tester files are provided by CS61B course staff.
 
-##### Production uses
+#### Production uses
 - Check out the `/production` directory, which includes a `.launcher.sh` shell script and some other java class files. Setup with the following steps.
     - `source .launcher.sh` : Run the shell script every time the terminal is restarted, or add the path to your `./bashrc` file (or whatever shell rc file).
     - `gitlet init`
