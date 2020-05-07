@@ -155,64 +155,8 @@ public class Repo {
     /** Gitlet command merge.
      *  @param mergeB branch to merge from. */
     public void merge(String mergeB) {
-        String originMerge = mergeB;
-        mergeB = reconstructBranch(mergeB);
-        checkMerge(mergeB); Commit mergeHead = readBranch(mergeB);
-        HashMap<String, String> currMap = _CTree.getHEAD().blobsMap();
-        HashMap<String, String> mergeMap = mergeHead.blobsMap();
-        if (hasUntracked()) {
-            throw new GitletException("There is an untracked file "
-                    + "in the way; delete it, or add and commit it first.");
-        }
-        Commit lca = findLCA(_CTree.getHEAD(), mergeHead);
-        if (lca.getHash().equals(mergeHead.getHash())) {
-            System.out.println("Given branch is "
-                    + "an ancestor of the current branch.");
-            return;
-        } else if (lca.getHash().equals(_CTree.getHEAD().getHash())) {
-            System.out.println("Current branch fast-forwarded.");
-            String fastHash = mergeHead.getHash();
-            checkOutCommit(fastHash);
-            Utils.writeContents(
-                    Utils.join(_branchPath, _CTree.getCurrBranch()), fastHash);
-            return;
-        }
-        HashMap<String, String> lcaMap = lca.blobsMap();
-        HashMap<String, String> unionMap = new HashMap<>(mergeMap);
-        unionMap.putAll(currMap);
-        Set<String> unionCM = unionMap.keySet();
-        for (String i : unionCM) {
-            String currHash = currMap.get(i);
-            String mergeHash = mergeMap.get(i);
-            if (currHash != null && mergeHash != null) {
-                if (lcaMap.containsKey(i)) {
-                    processChange(lcaMap.get(i), currHash,
-                            mergeHash, i);
-                } else if (!currHash.equals(mergeHash)) {
-                    processConflict(currHash, mergeHash, i);
-                }
-            } else if (currHash != null) {
-                if (lcaMap.containsKey(i)) {
-                    if (currHash.equals(lcaMap.get(i))) {
-                        _stage.addToStage("remove", i, currHash);
-                        Utils.restrictedDelete(i);
-                    } else {
-                        processConflict(currHash, mergeHash, i);
-                    }
-                }
-            } else if (mergeHash != null) {
-                if (!lcaMap.containsKey(i)) {
-                    Utils.writeContents(new File(i),
-                            findBlobByUid(mergeHash).getContent());
-                    _stage.addToStage("add", i, mergeHash);
-                } else if (!mergeHash.equals(lcaMap.get(i))) {
-                    processConflict(currHash, mergeHash, i);
-                }
-            }
-        }
-        String commitMsg = String.format("Merged %s into %s.",
-                originMerge, _CTree.getCurrBranch());
-        _CTree.commit(false, _stage, mergeHead.getHash(), commitMsg);
+        Merge helper = new Merge(this);
+        helper.merge(mergeB);
     }
 
     /** Add-remote command of Gitlet.
@@ -260,57 +204,14 @@ public class Repo {
         return buffer[len - 1];
     }
 
-    /** Helper function for merge to process file change conditions.
-     *  Assume that the file is presented in both Branch Head, and LCA.
-     * @param ref LCA for reference
-     * @param cHash first blob hash
-     * @param mHash second blob hash
-     * @param fname filename
-     */
-    private void processChange(String ref, String cHash,
-                                String mHash, String fname) {
-        boolean currChange = ref.compareTo(cHash) != 0;
-        boolean mergeChange = ref.compareTo(mHash) != 0;
-        if (!currChange && mergeChange) {
-            Utils.writeContents(new File(fname),
-                    findBlobByUid(mHash).getContent());
-            _stage.addToStage("add", fname, mHash);
-        } else if (currChange && mergeChange
-                && !cHash.equals(mHash)) {
-            processConflict(cHash, mHash, fname);
-        }
-    }
-
     /** A little modification based on the implementation of remote.
      * @param branch is branch to be reconstructed
      * @return a new string of branch name */
-    private String reconstructBranch(String branch) {
+    public static String reconstructBranch(String branch) {
         if (branch.contains(File.separator)) {
             return branch.replaceAll(File.separator, "_");
         }
         return branch;
-    }
-
-    /** Given two blobHash, merge the files.
-     * @param cHash first hash
-     * @param mHash second hash
-     * @param fname file*/
-    private void processConflict(String cHash, String mHash,
-                                 String fname) {
-        System.out.println("Encountered a merge conflict.");
-        String currContent, mergeContent;
-        currContent = mergeContent = "";
-        if (cHash != null) {
-            currContent = findBlobByUid(cHash).getContent();
-        }
-        if (mHash != null) {
-            mergeContent = findBlobByUid(mHash).getContent();
-        }
-        String result = "<<<<<<< HEAD\n" + currContent + "=======\n"
-                + mergeContent + ">>>>>>>\n";
-        Utils.writeContents(new File(fname), result);
-        Blob newBlob = new Blob(new File(fname));
-        _stage.addToStage("add", fname, newBlob.getHash());
     }
 
     /** Helper function for merge() to find a latest common ancesetor.
@@ -319,7 +220,7 @@ public class Repo {
      * @param merge merge head
      * @return the Commit LCA
      *  */
-    private Commit findLCA(Commit curr, Commit merge) {
+    public Commit findLCA(Commit curr, Commit merge) {
         Set<String> mergeParents = _CTree.getParentChain(merge);
         LinkedList<String> choices = new LinkedList<>();
 
@@ -340,55 +241,23 @@ public class Repo {
         throw new GitletException("Cannot find LCA!");
     }
 
-    /** Helper function for Merge to verify condition.
-     * @param merge is merge checking*/
-    private void checkMerge(String merge) {
-        File verify = Utils.join(_branchPath, merge);
-        boolean stageCleared = _stage.getStage("add").size() == 0
-                && _stage.getStage("remove").size() == 0;
-
-        if (merge.equals(_CTree.getCurrBranch())) {
-            throw new GitletException("Cannot merge a "
-                    + "branch with itself.");
-        } else if (!verify.exists()) {
-            throw new GitletException("A branch with that"
-                    + " name does not exist.");
-        } else if (!stageCleared) {
-            throw new GitletException("You have uncommitted changes.");
-        }
-    }
-
-    /** Specifically for merge.
-     * @return true is there is untrack files*/
-    private boolean hasUntracked() {
-        List<String> cwdFiles = Utils.plainFilenamesIn(new File("."));
-        if (cwdFiles != null) {
-            for (String fname : cwdFiles) {
-                boolean tracked
-                        = _CTree.getHEAD().blobsMap().containsKey(fname);
-                if (!tracked) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
     /** A Helper function to read Branch and return branch head's Commit object.
      * @param name is branch name
      * @return the result of reading a branch */
-    private Commit readBranch(String name) {
+    public static Commit readBranch(String name) {
         File branchPath = Utils.join(_branchPath, name);
         return Utils.uidToCommit(
                 Utils.readContentsAsString(branchPath));
     }
 
-    /** Helper function that checks out everything in a commit, given a
-     *  FULL commit ID. It does not write anything out!
-     *  This helper avoids redundancy in checkout case 3, and reset.
-     * @param commitID commit id
+    /** Helper function that checks out everything in a commit, given a FULL
+     *  commit ID. It does not write anything out! This helper avoids redundancy
+     *  in checkout case 3, reset, and merge.
+     *  Notes:   Below the two sout [Affected file] statement will cause
+     *  integration test to error.
+     *  @param commitID commit id
      *  */
-    private void checkOutCommit(String commitID) {
+    public void checkOutCommit(String commitID) {
         HashMap<String, String> blobMap
                 = Utils.uidToCommit(commitID).blobsMap();
         Set<String> filesToTrack = blobMap.keySet();
@@ -399,10 +268,12 @@ public class Repo {
                         + "in the way; delete it, or add and commit it first.");
             }
             blobToCWD(blobMap, fname);
+            System.out.println("[Affected file]: " + fname + " (written in CWD)");
             originTrack.remove(fname);
         }
         for (String remain : originTrack) {
             Utils.restrictedDelete(remain);
+            System.out.println("[Affected file]: " + remain + " (deleted in CWD)");
         }
         _stage.reset();
     }
@@ -484,7 +355,7 @@ public class Repo {
      * @param fname is file
      * @return the corresponding blob
      * */
-    private Blob findBlobByUid(String fname) {
+    public static Blob findBlobByUid(String fname) {
         assert Utils.join(_blobPath, fname).exists();
         return Utils.readObject(Utils.join(_blobPath, fname), Blob.class);
     }
@@ -576,19 +447,19 @@ public class Repo {
     /** File separator. */
     private static final String S = File.separator;
     /** Path File to branches. */
-    private File _branchPath
+    private static File _branchPath
             = new File("." + S
             + ".gitlet" + S + "refs" + S + "branches");
     /** Path File to blobs. */
-    private File _blobPath
+    private static File _blobPath
             = new File("." + S
             + ".gitlet" + S + "objects" + S + "blobs");
     /** Path File to commits. */
-    private File _commitPath
+    private static File _commitPath
             = new File("." + S
             + ".gitlet" + S + "objects" + S + "commits");
     /** Path File to remote. */
-    private File _remotePath
+    private static File _remotePath
             = new File("." + S
             + ".gitlet" + S + "refs" + S + "remotes");
 }

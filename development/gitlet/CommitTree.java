@@ -320,7 +320,7 @@ public class CommitTree implements Serializable {
         }
         File branchPath = Utils.join(stored.location(), localBranch);
         if (!branchPath.exists()) {
-            throw new GitletException(" That remote does"
+            throw new GitletException("That remote does"
                     + " not have that branch.");
         }
     }

@@ -132,7 +132,9 @@ public class Main {
         List<String> remList = Utils.plainFilenamesIn(remote);
         System.out.println("\n=== Remote List ===");
         for (String i : remList) {
-            System.out.println(">>> " + i);
+            Remote rObject
+                    = Utils.readObject(Utils.join(remote, i), Remote.class);
+            System.out.println(">>> " + i + "\t" + rObject.location());
         }
         System.out.println("=== List end ===\n");
     }
