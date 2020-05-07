@@ -17,7 +17,7 @@
         -- blobs (dir)
         -- ** CommitTree (file) would also be saved here.
     - refs
-        -- branches (dir): master, ...etc
+        -- branches (dir)
         -- remotes (dir)
     - stage
 ```
@@ -266,6 +266,7 @@ P.S. `LCA` = Latest common ancestor.
 *   `rm-branch`
 *   `reset`
 *   `merge`
+*   `list-remote`
 ##### Extra credit 
 *   `add-remote`
 *   `rm-remote`
