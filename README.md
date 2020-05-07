@@ -6,6 +6,7 @@ Gitlet support plain files tracking, and remote collaboration, with most of the 
 <br>Instructions for using the production version, and development reference will be posted soon, along with a demo GIF :)
 <br><i>May, 2020</i>
 <hr>
+
 ## Commands
 *   `init `
 *   `add`
