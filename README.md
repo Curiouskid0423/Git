@@ -1,4 +1,4 @@
-# Gitlet &nbsp; 2.0
+# Gitlet 2.0
 #### CS61B Data Structure, Spring 2020, Final project *expanded version*.
 <br>
 
