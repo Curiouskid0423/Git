@@ -1,5 +1,5 @@
-# Gitlet 
-#### CS61B Data Structure, Spring 2020, Final project expanded version.
+# Gitlet &nbsp; 2.0
+#### CS61B Data Structure, Spring 2020, Final project *expanded version*.
 <br>
 
 Implemented my own git, a version control language, with no external backbone code support. **Gitlet** is written with about 2200 lines of Java. It support plain files tracking, remote collaboration, basically most of the essential git commands and functionality.
