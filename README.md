@@ -1,4 +1,4 @@
-# Gitlet 2.0
+# Project_Gitlet_2.0
 #### UC Berkeley Data Structure Class, Spring 2020, final project *expanded version*.
 <br>
 
