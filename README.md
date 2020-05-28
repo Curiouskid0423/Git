@@ -1,4 +1,4 @@
-# Implement my own Git
+# Implement Git
 #### UC Berkeley Data Structure Class, Spring 2020, final project *expanded version*.
 <br>
 
@@ -19,8 +19,8 @@ Implemented my own git, a version control language, with no external backbone co
 <hr>
 
 ### Development uses
-- If you want to create your own git as well (super fun!), check out the java files in `/development` directory.
-Makefile, test cases, and tester files are provided by CS61B course staff.
+- If you want to create your own git as well (super fun!), check out the java files in `/development` directory.<br>
+Makefile, test cases, and tester files are provided by CS61B course staff. All the other files are written by myself.
 
 ### Production uses
 - Check out the `/production` directory, which includes a `.launcher.sh` shell script and some other java class files. Setup with the following steps.
