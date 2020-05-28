@@ -1,11 +1,11 @@
 # Gitlet 2.0
-#### CS61B Data Structure, Spring 2020, Final project *expanded version*.
+#### UC Berkeley Data Structure Class, Spring 2020, final project *expanded version*.
 <br>
 
 Implemented my own git, a version control language, with no external backbone code support. **Gitlet** is written with about 2200 lines of Java. It support plain files tracking, remote collaboration, basically most of the essential git commands and functionality.
 *May, 2020*
 
-###### Disclaimer: &nbsp;&nbsp; *Future CS61b peeps, this repo would NOT work for your integration tests. It's modified quite a lot after the class to achieve the result that I want, so do yourself a favor and do not clone it* :)
+###### Disclaimer: &nbsp;&nbsp; *Future CS61b peeps, this repo would NOT work for your autograder tests. It has been modified quite a lot after the class to achieve the result that I want, so do yourself a favor and do not clone it* :)
 <div style="display: flex;">
     <img src="git_logo.png" alt="git logo" width="30" height="30"/></div>
 <hr>  
