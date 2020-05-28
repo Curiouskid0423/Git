@@ -1,4 +1,4 @@
-# Project_Gitlet_2.0
+# Implement my own Git
 #### UC Berkeley Data Structure Class, Spring 2020, final project *expanded version*.
 <br>
 
