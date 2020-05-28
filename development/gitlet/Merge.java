@@ -119,8 +119,8 @@ public class Merge {
         if (mHash != null) {
             mergeContent = Repo.findBlobByUid(mHash).getContent();
         }
-        String result = "<<<<<<< HEAD\n" + currContent + "=======\n"
-                + mergeContent + ">>>>>>>\n";
+        String result = "<<<<<<<< HEAD\n" + currContent + "========\n"
+                + mergeContent + ">>>>>>>>\n";
         Utils.writeContents(new File(fname), result);
         Blob newBlob = new Blob(new File(fname));
         _stage.addToStage("add", fname, newBlob.getHash());

@@ -79,7 +79,7 @@ public class Repo {
             }
         }
         if (!found) {
-            throw new GitletException("Found no commit with that message.");
+            throw new GitletException("Did not find any commit with that message.");
         }
     }
 
@@ -128,7 +128,7 @@ public class Repo {
                     + " contain Separator character.");
         }
         if (Utils.join(_branchPath, fname).exists()) {
-            throw new GitletException("A branch with that name"
+            throw new GitletException("One branch with that name"
                     + " already exists.");
         }
         _CTree.createBranch(fname);
@@ -164,8 +164,8 @@ public class Repo {
      * @param remoteLoc file path string to remote. */
     public void addRemote(String name, String remoteLoc) {
         if (Utils.join(_remotePath, name).exists()) {
-            throw new GitletException("A remote "
-                    + "with that name already exists.");
+            throw new GitletException("A gitlet remote "
+                    + "with that name already exists!");
         } else if (!getExtension(remoteLoc).equals(".gitlet")) {
             throw new GitletException("Not a gitlet"
                     + " initialized folder.");
@@ -265,7 +265,7 @@ public class Repo {
         for (String fname : filesToTrack) {
             if (presentButUntracked(fname)) {
                 throw new GitletException("There is an untracked file "
-                        + "in the way; delete it, or add and commit it first.");
+                        + "in the way; delete it or add and commit first.");
             }
             blobToCWD(blobMap, fname);
             System.out.println("[Affected file]: " + fname + " (written in CWD)");
